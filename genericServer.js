@@ -51,14 +51,15 @@ context where $ signifies that object.
 	* returns the list of all running subservers
 */
 var log4js = require('log4js');
-
+// ^^ Is to check if the module log4js is installed. If not, use the command: "npm install log4js".
 log4js.configure({
   appenders: { CSI: { type: 'file', filename: 'CSI.log' } },
   categories: { default: { appenders: ['CSI'], level: 'info' } }
 });
-
+//^^ configure the CSI.log/log4js settings & categories.
 const logger = log4js.getLogger('CSI');
 logger.level = 'INFO';
+//^^ Describe the logger level for log4js. Several options possible: "All, DEBUG, INFO, WARN, ERROR, FATAL, OFF, TRACE".
 
 var Hapi = require('hapi'),
 	nocrypto = require("./nocrypto.js"),
@@ -102,6 +103,7 @@ mkObject$ = (obj) => {
 				});
 				return '"Generic Server Reset"';
 				logger.info("Generic Server Reset");
+				// Logs if the generic server resets.
 			}
 		},
 		{	method: 'POST',
@@ -109,10 +111,11 @@ mkObject$ = (obj) => {
 			handler: function(request, reply) {
 				var $ = mkObject$(request.payload);
 												 $.trace(2,'Generic$Generic:1')
-				logger.info($.trace(2));
+				// undefined / verwijderen logger.info($.trace(2) + (" TESSSTT"));
 				if (servers.hasOwnProperty($.port)) {
 					return '**ERROR** port already in use ('+$.port+')'
 					logger.error('port already in use ('+$.port+')');
+					// Logs if port is in use. 
 				}
 				servers[$.port] = $;
 				if (!$.hasOwnProperty('init')) $.init = (()=>{});
@@ -139,7 +142,6 @@ mkObject$ = (obj) => {
 									$.PATH = request.params;
 									$.REQUEST = request;
 									return v($) || 'null';
-									logger.info(v($) || 'null');
 								}
 							}
 							if (i==='POSTS') { $.trace(2,'Generic$Generic:2')
@@ -163,23 +165,26 @@ mkObject$ = (obj) => {
 						delete $.server;
 						return '"destroyed"';
 						logger.info(servers[$.port] +' destroyed');
+						// Logs which server + port is destroyed. 
 					}
 				}])
 				const init = async () => {
 					await $.server.start();
 					console.log(`SubServer running at: ${$.server.info.uri}`);
 					logger.info('SubServer running at: '+$.server.info.uri); 
+					// Logs on what address the SubServer is running + the port nuber.
 				};
 
 				process.on('unhandledRejection', (err) => {
 					console.log(err);
 					logger.error(err);
+					// Logs errors. 
 					process.exit(1);
 				});
 
 				init();
 				return `SubServer running at: ${$.server.info.uri}`;
-				logger.info('SubServer running at: '+server.info.uri);
+				//logger.info('SubServer running at: '+server.info.uri);
 			}
 	}]);
 }());
@@ -188,6 +193,7 @@ const init = async () => {
     await server.start();
     console.log(`Server running at: ${server.info.uri}`);
     logger.info('Server running at: '+server.info.uri);
+    // Logs where the server is running / address + port.
 };
 
 process.on('unhandledRejection', (err) => {

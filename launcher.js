@@ -39,16 +39,6 @@ AccessManager: a service which checks access rights
 	verify: check if the user has the required role
 
 */
-var log4js = require('log4js');
-
-log4js.configure({
-  appenders: { CSI: { type: 'file', filename: 'CSI.log' } },
-  categories: { default: { appenders: ['CSI'], level: 'info' } }
-});
-
-const logger = log4js.getLogger('CSI');
-logger.level = 'INFO';
-
 var Hapi = require('hapi'),
 	nt = require("./notesto.js");
 (function(nt){
